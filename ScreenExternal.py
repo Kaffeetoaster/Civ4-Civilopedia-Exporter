@@ -88,11 +88,11 @@ class ScreenExternal:
 		logToFile('attachImageButton was called')
 		logToFile('with args: %s' % str(args))
   
-		link = self.buildPageLink(str(args[4]), args[5])
+		link, previewText = self.buildPageLink(str(args[4]), args[5])
 		buttonData = {	
 					"type": "buttonlink",
 					"source": args[2],
-					
+					"previewText": previewText
 				}
 		if link != "":
 			buttonData["link"] = link
@@ -126,7 +126,7 @@ class ScreenExternal:
 		logToFile('addDDSGFCAt was called')
 		logToFile('with args: %s' % str(args))
 		# basically buttons. exept arrows.
-		link = self.buildPageLink(str(args[7]), args[8])
+		link, previewText = self.buildPageLink(str(args[7]), args[8])
   
 		buttonData = {
 						"type": "buttonlinkAt",
@@ -134,7 +134,8 @@ class ScreenExternal:
 						"x": args[3], 
 						"y": args[4], 
 						"width": args[5], 
-						"height": args[6]
+						"height": args[6],
+						"previewText": previewText
 						}
 		if link != "":
 			# if link is empty, the button will not be added to the page.
@@ -155,14 +156,15 @@ class ScreenExternal:
 	def setImageButtonAt(self, *args, **kwargs):
 		logToFile('setImageButtonAt was called')
 		logToFile('with args: %s' % str(args))
-		link = self.buildPageLink(str(args[7]), args[8])
+		link, previewText = self.buildPageLink(str(args[7]), args[8])
 		buttonData = {
 						"type": "buttonlinkAt",
 						"source": args[2],
 						"x": args[3], 
 						"y": args[4], 
 						"width": args[5], 
-						"height": args[6]
+						"height": args[6],
+						"previewText": previewText
 						}
 		if link != "":
 			# if link is empty, the button will not be added to the page.

@@ -38,34 +38,49 @@ def getUnitCategory(iUnit):
 def buildLink(categoryName, entryName):
     return "%s#%s" % (categoryName.replace(" ", "-"), entryName.replace(" ", "-"))
 
+LinkFunctionLookup = {
+    "WIDGET_PEDIA_JUMP_TO_CIV": 
+        [gc.getCivilizationInfo, "TXT_KEY_PEDIA_CATEGORY_CIV", None],
+    "WIDGET_PEDIA_JUMP_TO_LEADER": 
+        [gc.getLeaderHeadInfo, "TXT_KEY_PEDIA_CATEGORY_LEADER", None],
+    "WIDGET_PEDIA_JUMP_TO_CIVIC": 
+        [gc.getCivicInfo, "TXT_KEY_PEDIA_CATEGORY_CIVIC", lambda entryId: CyGameTextMgr().parseCivicInfo(entryId, False, False, False)],
+    "WIDGET_PEDIA_JUMP_TO_RELIGION": 
+        [gc.getReligionInfo, "TXT_KEY_PEDIA_CATEGORY_RELIGION", lambda entryId: CyGameTextMgr().parseReligionInfo(entryId, False)],
+    "WIDGET_PEDIA_JUMP_TO_CORPORATIONS": 
+        [gc.getCorporationInfo, "TXT_KEY_PEDIA_CATEGORY_CORPORATION", lambda entryId: CyGameTextMgr().parseCorporationInfo(entryId, False)],
+    "WIDGET_PEDIA_JUMP_TO_TECH": 
+        [gc.getTechInfo, "TXT_KEY_PEDIA_CATEGORY_TECH", lambda entryId: CyGameTextMgr().getTechHelp(entryId, False, False, False, False, -1)],
+    "WIDGET_PEDIA_JUMP_TO_REQUIRED_TECH": 
+        [gc.getTechInfo, "TXT_KEY_PEDIA_CATEGORY_TECH", lambda entryId: CyGameTextMgr().getTechHelp(entryId, False, False, False, False, -1)],
+    "WIDGET_PEDIA_JUMP_TO_DERIVED_TECH": 
+        [gc.getTechInfo, "TXT_KEY_PEDIA_CATEGORY_TECH", lambda entryId: CyGameTextMgr().getTechHelp(entryId, False, False, False, False, -1)],
+    "WIDGET_TECH_TREE": 
+        [gc.getTechInfo, "TXT_KEY_PEDIA_CATEGORY_TECH", lambda entryId: CyGameTextMgr().getTechHelp(entryId, False, False, False, False, -1)],
+    "WIDGET_PEDIA_JUMP_TO_UNIT":
+        [gc.getUnitInfo, "TXT_KEY_PEDIA_CATEGORY_UNIT", lambda entryId: CyGameTextMgr().getUnitHelp(entryId, False, False, False, None)],
+    "WIDGET_PEDIA_JUMP_TO_PROMOTION": 
+        [gc.getPromotionInfo, "TXT_KEY_PEDIA_CATEGORY_PROMOTION", lambda entryId: CyGameTextMgr().getPromotionHelp(entryId, False)],
+    "WIDGET_PEDIA_JUMP_TO_BUILDING": 
+        [gc.getBuildingInfo, "TXT_KEY_PEDIA_CATEGORY_BUILDING", lambda entryId: CyGameTextMgr().getBuildingHelp(entryId, False, False, False, None)],
+    "WIDGET_PEDIA_JUMP_TO_PROJECT": 
+        [gc.getProjectInfo, "TXT_KEY_PEDIA_CATEGORY_PROJECT", lambda entryId: CyGameTextMgr().getProjectHelp(entryId, False, None)],
+    "WIDGET_PEDIA_JUMP_TO_TERRAIN": 
+        [gc.getTerrainInfo, "TXT_KEY_PEDIA_CATEGORY_TERRAIN", lambda entryId: CyGameTextMgr().getTerrainHelp(entryId, False)],
+    "WIDGET_PEDIA_JUMP_TO_FEATURE":
+        [gc.getFeatureInfo, "TXT_KEY_PEDIA_CATEGORY_FEATURE", lambda entryId: CyGameTextMgr().getFeatureHelp(entryId, False)],
+    "WIDGET_PEDIA_JUMP_TO_BONUS": 
+        [gc.getBonusInfo, "TXT_KEY_PEDIA_CATEGORY_BONUS", lambda entryId: CyGameTextMgr().getBonusHelp(entryId, False)],
+    "WIDGET_PEDIA_JUMP_TO_IMPROVEMENT": 
+        [gc.getImprovementInfo, "TXT_KEY_PEDIA_CATEGORY_IMPROVEMENT", lambda entryId: CyGameTextMgr().getImprovementHelp(entryId, False)],
+}
 
-def buildPageLink(widgetName, entryId):
+
+def buildPageLink(widgetName, entryId):    
     # returns simply something like "Civ#Egypt" or "Tech#Pottery" for the given widgetName and entryId
-    if widgetName == "WIDGET_PEDIA_JUMP_TO_CIV":
-        entryName = gc.getCivilizationInfo(entryId).getDescription()
-        categoryName = CyTranslator().getText("TXT_KEY_PEDIA_CATEGORY_CIV", ())
-        return buildLink(categoryName, entryName)
-    elif widgetName == "WIDGET_PEDIA_JUMP_TO_LEADER":
-        entryName = gc.getLeaderHeadInfo(entryId).getDescription()
-        categoryName = CyTranslator().getText("TXT_KEY_PEDIA_CATEGORY_LEADER", ())
-        return buildLink(categoryName, entryName)
-    elif widgetName == "WIDGET_PEDIA_JUMP_TO_CIVIC":
-        entryName = gc.getCivicInfo(entryId).getDescription()
-        categoryName = CyTranslator().getText("TXT_KEY_PEDIA_CATEGORY_CIVIC", ())
-        return buildLink(categoryName, entryName)
-    elif widgetName == "WIDGET_PEDIA_JUMP_TO_RELIGION":
-        entryName = gc.getReligionInfo(entryId).getDescription()
-        categoryName = CyTranslator().getText("TXT_KEY_PEDIA_CATEGORY_RELIGION", ())
-        return buildLink(categoryName, entryName)
-    elif widgetName == "WIDGET_PEDIA_JUMP_TO_CORPORATIONS":
-        entryName = gc.getCorporationInfo(entryId).getDescription()
-        categoryName = CyTranslator().getText("TXT_KEY_PEDIA_CATEGORY_CORPORATION", ())
-        return buildLink(categoryName, entryName)
-    elif widgetName in ["WIDGET_PEDIA_JUMP_TO_TECH", "WIDGET_PEDIA_JUMP_TO_REQUIRED_TECH", "WIDGET_PEDIA_JUMP_TO_DERIVED_TECH", "WIDGET_TECH_TREE"]:
-        entryName = gc.getTechInfo(entryId).getDescription()
-        categoryName = CyTranslator().getText("TXT_KEY_PEDIA_CATEGORY_TECH", ())
-        return buildLink(categoryName, entryName)
-    elif widgetName == "WIDGET_PEDIA_JUMP_TO_UNIT":
+    # also returns the help/preview text for the entry if available, otherwise None
+    
+    if widgetName == "WIDGET_PEDIA_JUMP_TO_UNIT":
         entryName = gc.getUnitInfo(entryId).getDescription()
         UnitCategory = getUnitCategory(entryId)
         if UnitCategory == 0:
@@ -74,12 +89,9 @@ def buildPageLink(widgetName, entryId):
             categoryName = CyTranslator().getText("TXT_KEY_PEDIA_CATEGORY_MILITARY_UNITS", ())
         elif UnitCategory == 2:
             categoryName = CyTranslator().getText("TXT_KEY_PEDIA_CATEGORY_UNIQUE_UNITS", ())
-
-        return buildLink(categoryName, entryName)
-    elif widgetName == "WIDGET_PEDIA_JUMP_TO_PROMOTION":
-        entryName = gc.getPromotionInfo(entryId).getDescription()
-        categoryName = CyTranslator().getText("TXT_KEY_PEDIA_CATEGORY_PROMOTION", ())
-        return buildLink(categoryName, entryName)
+        previewText = CyGameTextMgr().getUnitHelp(entryId, False, False, False, None)
+        return buildLink(categoryName, entryName), previewText
+    
     elif widgetName == "WIDGET_PEDIA_JUMP_TO_BUILDING":
         entryName = gc.getBuildingInfo(entryId).getDescription()
         buildingCategories = {
@@ -91,30 +103,23 @@ def buildPageLink(widgetName, entryId):
             5: CyTranslator().getText("TXT_KEY_PEDIA_CATEGORY_WORLD_WONDERS", ()),
         }
         categoryName = buildingCategories.get(getBuildingCategory(entryId))
-        return buildLink(categoryName, entryName)
-    elif widgetName == "WIDGET_PEDIA_JUMP_TO_PROJECT":
-        entryName = gc.getProjectInfo(entryId).getDescription()
-        categoryName = CyTranslator().getText("TXT_KEY_PEDIA_CATEGORY_PROJECT", ())
-        return buildLink(categoryName, entryName)
-    elif widgetName == "WIDGET_PEDIA_JUMP_TO_TERRAIN":
-        entryName = gc.getTerrainInfo(entryId).getDescription()
-        categoryName = CyTranslator().getText("TXT_KEY_PEDIA_CATEGORY_TERRAIN", ())
-        return buildLink(categoryName, entryName)
-    elif widgetName == "WIDGET_PEDIA_JUMP_TO_FEATURE":
-        entryName = gc.getFeatureInfo(entryId).getDescription()
-        categoryName = CyTranslator().getText("TXT_KEY_PEDIA_CATEGORY_FEATURE", ())
-        return buildLink(categoryName, entryName)
-    elif widgetName == "WIDGET_PEDIA_JUMP_TO_BONUS":
-        entryName = gc.getBonusInfo(entryId).getDescription()
-        categoryName = CyTranslator().getText("TXT_KEY_PEDIA_CATEGORY_BONUS", ())
-        return buildLink(categoryName, entryName)
-    elif widgetName == "WIDGET_PEDIA_JUMP_TO_IMPROVEMENT":
-        entryName = gc.getImprovementInfo(entryId).getDescription()
-        categoryName = CyTranslator().getText("TXT_KEY_PEDIA_CATEGORY_IMPROVEMENT", ())
-        return buildLink(categoryName, entryName)
+        previewText = CyGameTextMgr().getBuildingHelp(entryId, False, False, False, None)
+        return buildLink(categoryName, entryName), previewText
 
     else:
-        return ""
+        funcInfo, TXT_KEY_CATEGORY, funcHelp = LinkFunctionLookup.get(widgetName, (None, None, None))
+        if funcInfo is None or TXT_KEY_CATEGORY is None:
+            link = ""
+        else:
+            entryName = funcInfo(entryId).getDescription()
+            categoryName = CyTranslator().getText(TXT_KEY_CATEGORY, ())
+            link = buildLink(categoryName, entryName)
+        if funcHelp is None:
+            previewText = ""
+        else:
+            previewText = funcHelp(entryId)
+        
+        return link, previewText
 
 class CvPediaMainExternal(CvPediaMain.CvPediaMain):
     
@@ -145,7 +150,8 @@ class CvPediaMainExternal(CvPediaMain.CvPediaMain):
                 continue # There is something wrong with hints so we will leave it for now.
             if iCategory in [PEDIA_UNIT_UPGRADES, PEDIA_PROMOTION_TREE]:
                 sCategory = self.categoryList[i][1]
-                self.screen.CivilopediaData["Categories"].append({"Category": sCategory, 
+                self.screen.CivilopediaData["Categories"].append({"Category": sCategory,
+                                                                  "CategoryType": "UpgradeTree",
                                                                   "Entries": [{
                                                                         "title": sCategory,
                                                                         "PageContent": [{
@@ -171,8 +177,9 @@ class CvPediaMainExternal(CvPediaMain.CvPediaMain):
             self.iCategory = iCategory
             func = self.mapScreenFunctions.get(iCategory)
             for i, iItem in enumerate(self.list):
-                if iItem[1] != -1: # subcategories like "Ancient Era"  in the Techs have -1 as iItem
-        
+                if iItem[1] == -1: # subcategories like "Ancient Era"  in the Techs have -1 as iItem
+                    self.screen.CivilopediaData["Categories"][-1]["Entries"].append({"title": "%s %d" % ("Subcategory:",iItem[0])})
+                else:
                     # start new entry for Category in ScreenExternal.CivilopediaData
                     self.screen.CivilopediaData["Categories"][-1]["Entries"].append({"title": iItem[0], "PageContent": []})
                     
@@ -185,7 +192,6 @@ class CvTechChooserExternal(CvTechChooser.CvTechChooser):
         self.techchooser_data = {
             "title": "TechChooser",
             "Techs": [],
-            "TechNames": [],
             "Arrows": []
         }
     # begin overrides of CvTechChooser methods

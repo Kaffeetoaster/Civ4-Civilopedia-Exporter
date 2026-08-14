@@ -18,8 +18,7 @@ class ScreenExternal:
 		self.TechChooserData = techchooser_data or {
 			"title": "TechChooser",
 			"Techs": [],
-			"Arrows": [],
-			"TechNames": []
+			"Arrows": []
 		}
 		self.buildPageLink = build_page_link
 		self.name = "i am an external Screen"
@@ -88,15 +87,15 @@ class ScreenExternal:
 		logToFile('attachImageButton was called')
 		logToFile('with args: %s' % str(args))
   
-		link, previewText = self.buildPageLink(str(args[4]), args[5])
+		link, previewText = self.buildPageLink((str(args[4]), args[5], args[6]))
 		buttonData = {	
 					"type": "buttonlink",
 					"source": args[2],
-					"previewText": previewText
+					"previewText": previewText,
+					"WidgetName": str(args[4])
 				}
 		if link != "":
 			buttonData["link"] = link
-			buttonData["linkCategory"] = str(args[4])
 			buttonData["linkEntry"] = args[5]
 		self.addToLastPediaPanelEntry(buttonData)
 		
@@ -126,7 +125,7 @@ class ScreenExternal:
 		logToFile('addDDSGFCAt was called')
 		logToFile('with args: %s' % str(args))
 		# basically buttons. exept arrows.
-		link, previewText = self.buildPageLink(str(args[7]), args[8])
+		link, previewText = self.buildPageLink((str(args[7]), args[8], args[9]))
   
 		buttonData = {
 						"type": "buttonlinkAt",
@@ -135,12 +134,12 @@ class ScreenExternal:
 						"y": args[4], 
 						"width": args[5], 
 						"height": args[6],
-						"previewText": previewText
+						"previewText": previewText,
+						"WidgetName": str(args[7])
 						}
 		if link != "":
 			# if link is empty, the button will not be added to the page.
 			buttonData["link"] = link
-			buttonData["linkCategory"] = str(args[7])
 			buttonData["linkEntry"] = args[8]
 		if args[1] == "TechList":
 			# Techchooser arrows
@@ -156,7 +155,7 @@ class ScreenExternal:
 	def setImageButtonAt(self, *args, **kwargs):
 		logToFile('setImageButtonAt was called')
 		logToFile('with args: %s' % str(args))
-		link, previewText = self.buildPageLink(str(args[7]), args[8])
+		link, previewText = self.buildPageLink((str(args[7]), args[8], args[9]))
 		buttonData = {
 						"type": "buttonlinkAt",
 						"source": args[2],
@@ -164,12 +163,12 @@ class ScreenExternal:
 						"y": args[4], 
 						"width": args[5], 
 						"height": args[6],
-						"previewText": previewText
+						"previewText": previewText,
+						"WidgetName": str(args[7])
 						}
 		if link != "":
 			# if link is empty, the button will not be added to the page.
 			buttonData["link"] = link
-			buttonData["linkCategory"] = str(args[7])
 			buttonData["linkEntry"] = args[8]
 		self.addToUpgradeGraph(buttonData)
 		

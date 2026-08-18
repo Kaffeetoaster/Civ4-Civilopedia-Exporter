@@ -11,7 +11,7 @@ gc = CyGlobalContext()
 
 import time
 
-def logToFile(message, filename="mylog.txt"):
+def logToFile(message, filename="myLogs/mylog.txt"):
 	f = open(filename, "a")  # append mode
 	f.write("%s at [%s]\n" % (message, time.ctime()))
 	f.close()
@@ -87,9 +87,9 @@ class CvPediaMainExternal(CvPediaMain.CvPediaMain):
             self.screen.CivilopediaData["Categories"].append({"Category": sCategory, "Entries": []})
             
             ## some logging
-            logToFile("CvPediaMainExternal: %s list length: %d" % (sCategory, len(self.list)), filename="print.txt")
+            logToFile("CvPediaMainExternal: %s list length: %d" % (sCategory, len(self.list)), filename="myLogs/print.txt")
             listasString = ",".join([str(i) for i in self.list])
-            logToFile("CvPediaMainExternal: %s list as string: %s" % (sCategory, listasString), filename="print.txt")
+            logToFile("CvPediaMainExternal: %s list as string: %s" % (sCategory, listasString), filename="myLogs/print.txt")
             ## end logging
             self.iCategory = iCategory
             func = self.mapScreenFunctions.get(iCategory)
@@ -102,7 +102,7 @@ class CvPediaMainExternal(CvPediaMain.CvPediaMain):
                 # elif iItem[0] != "":
                 #     self.screen.CivilopediaData["Categories"][-1]["Entries"].append({"title": "%s %s" % ("Subcategory:",iItem[0]), "PageContent": [{"title":iItem[0], "content": [], "type": "panel"}]})
                     
-            self.screen.saveCivilopediaDataToFile("CivilopediaData_raw.json")
+            self.screen.saveCivilopediaDataToFile("Export/CivilopediaData_raw.json")
             
 class CvTechChooserExternal(CvTechChooser.CvTechChooser):
     def __init__(self):
@@ -124,14 +124,14 @@ class CvTechChooserExternal(CvTechChooser.CvTechChooser):
         # init techchooser data structure.
         self.screen = self.getScreen()
         self.interfaceScreen() 
-        self.screen.saveTechChooserDataToFile("TechChooserData_raw.json")
+        self.screen.saveTechChooserDataToFile("Export/TechChooserData_raw.json")
         
         
         
         
 # other effects, like map center, trading on ocean, obsolete bonus, reveal bonus
 def buildHelpPreview(TXT_KEY_HELP, funcHelp, HelpEntryId, widgetName, entryId):
-    logToFile("buildPageLink: widgetName=%s, entryId=%s, HelpEntryId=%s => text=%s, function: %s " % (widgetName, entryId, HelpEntryId, TXT_KEY_HELP, funcHelp), filename="helptext_log.txt")
+    #logToFile("buildPageLink: widgetName=%s, entryId=%s, HelpEntryId=%s => text=%s, function: %s " % (widgetName, entryId, HelpEntryId, TXT_KEY_HELP, funcHelp), filename="helptext_log.txt")
     
     
     if funcHelp is None or HelpEntryId == -1:
@@ -140,14 +140,14 @@ def buildHelpPreview(TXT_KEY_HELP, funcHelp, HelpEntryId, widgetName, entryId):
         try:
             description = funcHelp(HelpEntryId).getDescription()
         except Exception, e:
-            logToFile("Error in buildHelpPreview: widgetName=%s, entryId=%s, HelpEntryId=%s => text=%s, function: %s, error: %s" % (widgetName, entryId, HelpEntryId, TXT_KEY_HELP, funcHelp, str(e)), filename="helptext_log.txt")
+            logToFile("Error in buildHelpPreview: widgetName=%s, entryId=%s, HelpEntryId=%s => text=%s, function: %s, error: %s" % (widgetName, entryId, HelpEntryId, TXT_KEY_HELP, funcHelp, str(e)), filename="myLogs/helptext_log.txt")
             description = ""
     try:
         if TXT_KEY_HELP.startswith("TXT_KEY"):
             return "%s %s" % (CyTranslator().getText(TXT_KEY_HELP, ()), description)
         return "%s %s" % (TXT_KEY_HELP, description)
     except Exception, e:
-        logToFile("Error in buildPageLink: widgetName=%s, entryId=%s, HelpEntryId=%s => text=%s, function: %s, error: %s" % (widgetName, entryId, HelpEntryId, TXT_KEY_HELP, funcHelp, str(e)), filename="helptext_log.txt")
+        logToFile("Error in buildPageLink: widgetName=%s, entryId=%s, HelpEntryId=%s => text=%s, function: %s, error: %s" % (widgetName, entryId, HelpEntryId, TXT_KEY_HELP, funcHelp, str(e)), filename="myLogs/helptext_log.txt")
         return ""
 
 

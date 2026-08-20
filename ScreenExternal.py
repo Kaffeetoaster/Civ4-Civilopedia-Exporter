@@ -4,7 +4,7 @@ from CvPythonExtensions import *
 import json_parser
 import time
 
-def logToFile(message, filename="mylog.txt"):
+def logToFile(message, filename="myLogs/mylog.txt"):
 	f = open(filename, "a")  # append mode
 	f.write("%s at [%s]\n" % (message, time.ctime()))
 	f.close()
@@ -194,6 +194,7 @@ class ScreenExternal:
 	# save the szTechID (args[0]) here and for the Tech in attachPanelAt(), so one can later assign them properly
 	def setTextAt(self, *args, **kwargs):
 		logToFile('setTextAt was called')
+		logToFile('with args: %s' % str(args))
 		LabelData = {
 			"type": "TechBoxLabel",
 			"id": args[0],

@@ -7,3 +7,9 @@ A small Civ4 BTS mod additon for extracting and exporting the Civilopedia and Te
 - Each mods needs its own CvPediaMain*External implementation, since the implementation details of the CvPedia Main class are too different across mods.
 
 - previews are created using a CvDLLWidgetData::parseHelp(args) call, which means this function needs to be exposed to python which is it not in most mods.
+
+
+
+## TODO:
+- name the places in CvScreensInterface.py where the Export functions should be called
+- name the folders where the exported json will land
